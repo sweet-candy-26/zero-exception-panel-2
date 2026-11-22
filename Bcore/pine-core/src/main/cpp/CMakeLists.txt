@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.4.1)
 
+add_compile_options(-w)
+
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(LINKER_FLAGS "-ffixed-x18 -Wl,--hash-style=both")
 set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${LINKER_FLAGS}")

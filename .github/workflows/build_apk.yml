@@ -24,7 +24,9 @@ jobs:
       - name: Accept Licenses & Install Required SDKs and NDK
         run: |
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-28" "platforms;android-29" "platforms;android-30" "build-tools;29.0.2" "cmake;3.10.2.4988404" "ndk;21.4.7075529" || true
+          echo y | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install "ndk;21.4.7075529" "platforms;android-28" "platforms;android-29" "platforms;android-30" "build-tools;29.0.2" "cmake;3.10.2.4988404"
+          echo "ndk.dir=$ANDROID_HOME/ndk/21.4.7075529" > local.properties
+          echo "sdk.dir=$ANDROID_HOME" >> local.properties
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -34,7 +36,7 @@ jobs:
           set -e -o pipefail
           ./gradlew :app:assembleBlackBox64Debug :app:assembleBlackBox32Debug --stacktrace 2>&1 | tee build_output.log
           echo "### Generated APK files:"
-          find app/build/outputs -name "*.apk" -ls || true
+          find app/build/outputs -name "*.apk" -ls
 
       - name: Push failure log to git branch if failed
         if: failure()
@@ -47,9 +49,17 @@ jobs:
           git commit -m "Auto-commit build error log [skip ci]"
           git push -f origin build-log
 
-      - name: Upload APK
-        if: success()
+      - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: ZERO-LOCATION-APKs
           path: app/build/outputs/apk/**/*.apk
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: success()
+        with:
+          tag_name: v2.1.0-zero
+          name: ZERO LOCATION v2.1.0
+          body: "Official APK build for ZERO LOCATION"
+          files: app/build/outputs/apk/**/*.apk
