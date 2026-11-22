@@ -36,20 +36,16 @@ jobs:
           echo "### Generated APK files:"
           find app/build/outputs -name "*.apk" -ls || true
 
-      - name: Show Build Log Summary on Failure
+      - name: Push failure log to git branch if failed
         if: failure()
         run: |
-          echo "### ❌ Build Failed" >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          tail -n 120 build_output.log >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-
-      - name: Upload Build Log on Failure
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-failure-log
-          path: build_output.log
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git checkout -B build-log
+          tail -n 300 build_output.log > BUILD_ERROR.txt
+          git add BUILD_ERROR.txt
+          git commit -m "Auto-commit build error log [skip ci]"
+          git push -f origin build-log
 
       - name: Upload APK
         if: success()
