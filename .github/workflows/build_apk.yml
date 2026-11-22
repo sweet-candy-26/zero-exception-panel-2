@@ -31,7 +31,9 @@ jobs:
 
       - name: Build APK with Gradle
         run: |
-          ./gradlew assembleBlackBox64Debug assembleBlackBox32Debug --stacktrace 2>&1 | tee build_output.log
+          ./gradlew :app:assembleBlackBox64Debug :app:assembleBlackBox32Debug --stacktrace 2>&1 | tee build_output.log
+          echo "### Generated APK files:"
+          find . -name "*.apk"
 
       - name: Report Error Summary on Failure
         if: failure()
@@ -53,4 +55,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ZERO-LOCATION-APKs
-          path: app/build/outputs/apk/**/*.apk
+          path: |
+            **/*.apk
