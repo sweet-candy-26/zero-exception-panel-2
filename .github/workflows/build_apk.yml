@@ -21,21 +21,22 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
 
-      - name: Accept Licenses & Install Build Tools and NDK
+      - name: Accept Licenses & Install Required SDKs and NDK
         run: |
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "cmake;3.10.2.4988404" "build-tools;29.0.2" "ndk;21.4.7075529" || true
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-28" "platforms;android-29" "platforms;android-30" "build-tools;29.0.2" "cmake;3.10.2.4988404" "ndk;21.4.7075529" || true
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: Build APK with Gradle
         run: |
+          set -e -o pipefail
           ./gradlew :app:assembleBlackBox64Debug :app:assembleBlackBox32Debug --stacktrace 2>&1 | tee build_output.log
           echo "### Generated APK files:"
-          find . -name "*.apk"
+          find app/build/outputs -name "*.apk" -ls || true
 
-      - name: Report Error Summary on Failure
+      - name: Show Build Log Summary on Failure
         if: failure()
         run: |
           echo "### ❌ Build Failed" >> $GITHUB_STEP_SUMMARY
@@ -55,5 +56,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ZERO-LOCATION-APKs
-          path: |
-            **/*.apk
+          path: app/build/outputs/apk/**/*.apk
