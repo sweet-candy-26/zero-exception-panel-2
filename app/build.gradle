@@ -153,7 +153,7 @@ dependencies {
     implementation 'com.afollestad.material-dialogs:core:3.3.0'
     implementation 'com.afollestad.material-dialogs:input:3.3.0'
     //dialog
-    implementation 'com.github.nukc.stateview:kotlin:2.2.0'
+    // implementation 'com.github.nukc:StateView:v2.2.0' (included in libs/StateView-v2.2.0.aar)
     //状态控制控件
     implementation 'com.roger.catloadinglibrary:catloadinglibrary:1.0.9'
     //加载dialog
