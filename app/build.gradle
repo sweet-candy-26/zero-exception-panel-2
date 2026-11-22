@@ -155,8 +155,7 @@ dependencies {
     //dialog
     // implementation 'com.github.nukc:StateView:v2.2.0' (included in libs/StateView-v2.2.0.aar)
     //状态控制控件
-    implementation 'com.roger.catloadinglibrary:catloadinglibrary:1.0.9'
-    //加载dialog
+    // implementation 'com.roger.catloadinglibrary:catloadinglibrary:1.0.9' (in libs/catloadinglibrary-1.0.9.aar)
     implementation 'com.github.Ferfalk:SimpleSearchView:0.2.0'
     //searchView
     implementation 'com.github.Othershe:CornerLabelView:1.0.0'
@@ -168,5 +167,5 @@ dependencies {
     implementation 'com.gitee.cbfg5210:RVAdapter:0.3.7'
 
     //悬浮窗
-    implementation 'com.imuxuan:floatingview:1.6'
+    // implementation 'com.imuxuan:floatingview:1.6' (in libs/floatingview-1.6.aar)
 }
