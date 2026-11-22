@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.4.1)
 add_compile_options(-w)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-set(LINKER_FLAGS "-ffixed-x18 -Wl,--hash-style=both")
+set(LINKER_FLAGS "-ffixed-x18 -Wl,--hash-style=both -Wl,-Bsymbolic")
 set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${LINKER_FLAGS}")
 set(CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS} ${LINKER_FLAGS}")
 set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} ${LINKER_FLAGS}")
@@ -24,13 +24,13 @@ set(PINE_SOURCES
         utils/well_known_classes.cpp)
 
 if (CMAKE_ANDROID_ARCH_ABI STREQUAL "armeabi-v7a")
-    set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -arch armv7")
+    set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -arch armv7 -fPIC")
     set(PINE_SOURCES
             ${PINE_SOURCES}
             trampoline/arch/thumb2.cpp
             trampoline/arch/thumb2.S)
 elseif(CMAKE_ANDROID_ARCH_ABI STREQUAL "arm64-v8a")
-    set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -arch arm64")
+    set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -arch arm64 -fPIC")
     set(PINE_SOURCES
             ${PINE_SOURCES}
             trampoline/arch/arm64.cpp
